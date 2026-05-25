@@ -1,0 +1,38 @@
+name: Build Haider Files APK
+
+on:
+  push:
+    branches: [ "master", "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+      with:
+        submodules: 'recursive'
+        
+    - name: Setup Java
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    - name: Setup Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '^1.21.0'
+        
+    - name: Build APK
+      working-directory: ./V2rayNG
+      run: |
+        chmod +x gradlew
+        ./gradlew assembleDebug
+        
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: Haider_Adel_Files
+        path: ./V2rayNG/app/build/outputs/apk/debug/*.apk
