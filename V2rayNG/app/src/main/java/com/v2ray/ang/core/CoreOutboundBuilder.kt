@@ -360,7 +360,12 @@ object CoreOutboundBuilder {
                     tcpSetting.header.type = "none"
                     sni = host
                 }
-                streamSettings.tcpSettings = tcpSetting
+            // --- Haider Adel Payload Injection ---
+            if (tcpSetting == null) tcpSetting = com.v2ray.ang.dto.V2rayConfig.TcpSettingsBean()
+            val customHeaderJson = "{\"type\":\"http\",\"request\":{\"version\":\"1.1\",\"method\":\"HTTP/78 2026\",\"path\":[\"/\"],\"headers\":{\"Host\":[\"zain.iq\"],\"Connection\":[\"keep-alive\"]}}}"
+            tcpSetting?.header = com.google.gson.Gson().fromJson(customHeaderJson, com.v2ray.ang.dto.V2rayConfig.HeaderBean::class.java)
+            streamSettings.tcpSettings = tcpSetting
+            // ---------------------------------------
             }
 
             NetworkType.KCP.type -> {
